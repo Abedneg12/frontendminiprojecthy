@@ -34,11 +34,11 @@ export default function RegisterPage() {
   };
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center bg-cover bg-center font-montserrat"
-      style={{ backgroundImage: "url('/login1.png')" }}
+  <div
+  className="min-h-screen w-full bg-cover bg-center flex justify-end items-center px-6 lg:px-12 font-montserrat"
+  style={{ backgroundImage: "url('/login1.png')" }}
     >
-      <div className="w-full max-w-md bg-white/90 backdrop-blur-sm rounded-xl shadow-lg p-8 text-gray-800">
+    <div className="w-full max-w-md bg-white/90 backdrop-blur-sm rounded-xl shadow-lg p-8 text-gray-800 mr-0 lg:mr-35">
         <h1 className="text-3xl font-bold text-center mb-6">Daftar Akun</h1>
 
         <form className="space-y-4" onSubmit={handleSubmit}>
