@@ -17,7 +17,7 @@ export default function LoginPage() {
         password,
       });
 
-      const token = res.data.token;
+      const token = res.data.data.token;
       localStorage.setItem('token', token);
       router.push('/');
     } catch (error: any) {
