@@ -1,14 +1,14 @@
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 
-interface DecodedToken {
+export interface DecodedToken {
   id: number;
+  full_name: string;
   email: string;
   role: 'CUSTOMER' | 'ORGANIZER';
+  referral_code: string;
   iat: number;
   exp: number;
 }
-
-// Sudah ada
 export function getUserFromToken(): DecodedToken | null {
   const token = localStorage.getItem('token');
   if (!token) return null;
@@ -21,7 +21,6 @@ export function getUserFromToken(): DecodedToken | null {
   }
 }
 
-// ✅ BARU: cek apakah user sudah login dan token valid
 export function isAuthenticated(): boolean {
   const token = localStorage.getItem('token');
   if (!token) return false;
@@ -34,7 +33,6 @@ export function isAuthenticated(): boolean {
     return false;
   }
 }
-
 
 export function logout() {
   localStorage.removeItem('token');

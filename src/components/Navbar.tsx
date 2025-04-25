@@ -2,39 +2,35 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { getUserFromToken, isAuthenticated, logout } from '@/utils/auth';
+import { useAppSelector, useAppDispatch } from '@/lib/redux/hooks';
+import { getUserFromToken } from '@/utils/auth';
+import { logout, setUserFromToken } from '@/lib/redux/slices/authSlice'
 
 export default function Navbar() {
   const router = useRouter();
-  const [role, setRole] = useState<string | null>(null);
-  const [showAvatar, setShowAvatar] = useState(false);
+  const dispatch = useAppDispatch();
+  const { user, isAuthenticated } = useAppSelector((state) => state.auth);
   const [showMenu, setShowMenu] = useState(false);
 
   useEffect(() => {
-    if (isAuthenticated()) {
-      const user = getUserFromToken();
-      setRole(user?.role ?? null);
-      setShowAvatar(true);
-    } else {
-      setShowAvatar(false);
+    const userFromToken = getUserFromToken();
+    if (userFromToken) {
+      dispatch(setUserFromToken(userFromToken));
     }
-  }, []);
+  }, [dispatch]);
 
   const handleAvatarClick = () => {
-    if (role === 'CUSTOMER') {
+    if (user?.role === 'CUSTOMER') {
       router.push('/profile');
-    } else if (role === 'ORGANIZER') {
+    } else if (user?.role === 'ORGANIZER') {
       router.push('/organizer/dashboard');
-    } else {
-      router.push('/login');
     }
     setShowMenu(false);
   };
 
   const handleLogout = () => {
-    logout();
-    setShowMenu(false);
-    router.push('/'); // Optional: Redirect to landing after logout
+    dispatch(logout());
+    router.push('/');
   };
 
   return (
@@ -52,16 +48,7 @@ export default function Navbar() {
             </span>
           </div>
 
-          {/* Search Bar */}
-          <div className="hidden lg:block flex-grow mx-6">
-            <input
-              type="text"
-              placeholder="Search Ticket"
-              className="w-full px-4 py-1.5 rounded-full border border-gray-300 shadow-sm focus:outline-none focus:ring focus:border-yellow-400 text-sm"
-            />
-          </div>
-
-          {/* Menu Navigation */}
+          {/* Navigation */}
           <div className="hidden md:flex space-x-6 text-sm font-medium text-gray-700">
             <button onClick={() => router.push('/explore')} className="hover:text-yellow-500">Explore</button>
             <button onClick={() => router.push('/create-event')} className="hover:text-yellow-500">Create Your Event</button>
@@ -69,9 +56,9 @@ export default function Navbar() {
             <button onClick={() => router.push('/my-tickets')} className="hover:text-yellow-500">Find My Tickets</button>
           </div>
 
-          {/* Right Side: Auth */}
+          {/* Auth Area */}
           <div className="ml-4 flex items-center space-x-4">
-            {!showAvatar ? (
+            {!isAuthenticated ? (
               <>
                 <button
                   onClick={() => router.push('/login')}
@@ -98,9 +85,9 @@ export default function Navbar() {
                   <div className="absolute right-0 mt-2 bg-white border rounded shadow text-sm w-44 z-50">
                     <button
                       onClick={handleAvatarClick}
-                      className="block px-4 py-2 hover:bg-gray-100 w-full text-left"
+                      className="block px-4 py-2 hover:bg-gray-100 w-full text-left text-gray-700"
                     >
-                      {role === 'CUSTOMER' ? 'Profile' : 'Dashboard'}
+                      {user?.role === 'CUSTOMER' ? 'Profile' : 'Dashboard'}
                     </button>
                     <button
                       onClick={handleLogout}

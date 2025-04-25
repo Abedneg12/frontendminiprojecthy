@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Montserrat } from 'next/font/google';
+import StoreProvider from "@/components/storeProvider";
 
 
 
@@ -35,7 +36,9 @@ export default function RootLayout({
       <body 
         className={`${montserrat.className} ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <StoreProvider>
+          {children}
+        </StoreProvider>
       </body>
     </html>
   );
