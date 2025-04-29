@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Montserrat } from 'next/font/google';
 import StoreProvider from "@/components/storeProvider";
+import { Toaster} from 'react-hot-toast'
 
 
 
@@ -37,6 +38,7 @@ export default function RootLayout({
         className={`${montserrat.className} ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <StoreProvider>
+          <Toaster position = "top-right" />
           {children}
         </StoreProvider>
       </body>

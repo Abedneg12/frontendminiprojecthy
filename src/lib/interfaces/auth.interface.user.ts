@@ -4,6 +4,7 @@ export interface User {
   role: 'CUSTOMER' | 'ORGANIZER';
   full_name?: string;
   referral_code?: string;
+  is_verified?: boolean;
 }
 
 export interface AuthState {
