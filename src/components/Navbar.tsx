@@ -1,10 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppSelector, useAppDispatch } from '@/lib/redux/hooks';
-import { getUserFromToken } from '@/utils/auth';
-import { logout, setUserFromToken } from '@/lib/redux/slices/authSlice'
+import { logout } from '@/lib/redux/slices/authSlice'
 
 export default function Navbar() {
   const router = useRouter();
