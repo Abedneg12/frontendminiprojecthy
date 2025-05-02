@@ -27,8 +27,8 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      loginSchema.parse(form); // Validasi form
-      const res = await axios.post('http://localhost:5000/auth/login', form);
+      loginSchema.parse(form); 
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, form);
       const { token, user } = res.data.data;
 
       dispatch(loginAction({ user, token }));

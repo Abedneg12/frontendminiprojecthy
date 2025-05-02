@@ -12,12 +12,6 @@ export default function Navbar() {
   const { user, isAuthenticated } = useAppSelector((state) => state.auth);
   const [showMenu, setShowMenu] = useState(false);
 
-  useEffect(() => {
-    const userFromToken = getUserFromToken();
-    if (userFromToken) {
-      dispatch(setUserFromToken(userFromToken));
-    }
-  }, [dispatch]);
 
   const handleAvatarClick = () => {
     if (user?.role === 'CUSTOMER') {

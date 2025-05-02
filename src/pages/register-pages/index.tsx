@@ -35,7 +35,7 @@ export default function RegisterPage() {
     e.preventDefault();
     try {
       registerSchema.parse(form);
-      await axios.post('http://localhost:5000/auth/register', form);
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, form);
       toast.success('Registrasi berhasil, silahkan cek email untuk verifikasi!');
       router.push('/login');
     } catch (error: any) {
