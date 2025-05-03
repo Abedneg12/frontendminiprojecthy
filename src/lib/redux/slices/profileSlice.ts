@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Coupon, Voucher, ProfileState } from '@/lib/interfaces/auth.interface.user';
+import { ProfileState } from '@/lib/interfaces/auth.interface.user';
 
 
 const initialState: ProfileState = {

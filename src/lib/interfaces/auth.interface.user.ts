@@ -1,28 +1,7 @@
-export interface Point {
-  id: number;
-  amount: number;
-  source: string;
-  expired_at: string;
-}
+import { Coupon } from "./coupon.interface";
+import { Point } from "./point.interface";
+import { Voucher } from "./voucher.interface";
 
-export interface Coupon {
-  id: number;
-  code: string;
-  discount_amount: number;
-  expired_at: string;
-  is_used: boolean;
-}
-
-export interface Voucher {
-  id: number;
-  code: string;
-  discount_amount: number;
-  discount_type: string;
-  event: {
-    name: string;
-    start_date: string;
-  };
-}
 
 export interface User {
   id: number;
@@ -62,6 +41,7 @@ export interface CustomerProfileState {
     email: string;
     referral_code: string;
     is_verified: boolean;
+    profile_picture?: string | null;
     point: number;
     coupons: Coupon[];
     vouchers: Voucher[];

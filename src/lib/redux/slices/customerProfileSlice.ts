@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { Coupon, Voucher, CustomerProfileState } from '@/lib/interfaces/auth.interface.user';
+import { CustomerProfileState } from '@/lib/interfaces/auth.interface.user';
 
 
 
