@@ -64,7 +64,7 @@ export default function ProfilePage() {
   formData.append('profile_picture', file);
 
   try {
-    setIsUploading(true); // ⬅️ mulai upload
+    setIsUploading(true); // mulai upload
     const token = localStorage.getItem('token');
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/profile/customer/upload`, {
       method: 'PUT',
@@ -82,7 +82,7 @@ export default function ProfilePage() {
   } catch {
     toast.error('Terjadi kesalahan saat upload foto');
   } finally {
-    setIsUploading(false); // ⬅️ selesai upload
+    setIsUploading(false); // selesai upload
   }
 };
 
