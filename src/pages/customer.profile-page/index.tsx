@@ -16,6 +16,7 @@ export default function ProfilePage() {
   const [isEditingName, setIsEditingName] = useState(false);
   const [newName, setNewName] = useState('');
   const [isSaving, setIsSaving] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
     dispatch(fetchCustomerProfile());
@@ -58,6 +59,39 @@ export default function ProfilePage() {
     }
   };
 
+  const handleUploadPhoto = async (file: File) => {
+  const formData = new FormData();
+  formData.append('profile_picture', file);
+
+  try {
+    setIsUploading(true); // ⬅️ mulai upload
+    const token = localStorage.getItem('token');
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/profile/customer/upload`, {
+      method: 'PUT',
+      headers: { Authorization: `Bearer ${token}` },
+      body: formData,
+    });
+
+    const result = await res.json();
+    if (res.ok) {
+      toast.success('Foto profil berhasil diupload');
+      dispatch(fetchCustomerProfile());
+    } else {
+      toast.error(result.message || 'Gagal upload foto');
+    }
+  } catch {
+    toast.error('Terjadi kesalahan saat upload foto');
+  } finally {
+    setIsUploading(false); // ⬅️ selesai upload
+  }
+};
+
+  const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      handleUploadPhoto(e.target.files[0]);
+    }
+  };
+
   if (loading || !profile) {
     return <div className="bg-white p-10 text-center text-black font-semibold">Memuat data profil...</div>;
   }
@@ -75,9 +109,12 @@ export default function ProfilePage() {
             {profile.profile_picture ? (
               <>
                 <img src={profile.profile_picture} alt="Foto Profil" className="w-28 h-28 rounded-full object-cover border" />
-                <div className="flex flex-col gap-1 w-full">
-                  <button className="text-sm text-blue-600 hover:underline">Ubah Foto</button>
-                  <button className="text-sm text-red-500 hover:underline">Hapus</button>
+                <div className="flex flex-col gap-1 w-full text-center">
+                  <label className={`text-sm text-blue-600 hover:underline cursor-pointer ${isUploading ? 'opacity-50 pointer-events-none' : ''}`}>
+                    <input type="file" className="hidden" onChange={onFileChange} disabled={isUploading} />
+                    {isUploading ? 'Mengunggah...' : 'Ubah Foto'}
+                  </label>
+                  <button className="text-sm text-red-500 hover:underline" disabled={isUploading}>Hapus</button>
                 </div>
               </>
             ) : (
@@ -85,9 +122,13 @@ export default function ProfilePage() {
                 <div className="w-28 h-28 bg-gray-100 text-gray-400 flex items-center justify-center rounded-full border text-sm">
                   Belum Ada
                 </div>
-                <button className="text-sm text-blue-600 hover:underline">Upload Foto</button>
+                <label className={`text-sm text-blue-600 hover:underline cursor-pointer ${isUploading ? 'opacity-50 pointer-events-none' : ''}`}>
+                  <input type="file" className="hidden" onChange={onFileChange} disabled={isUploading} />
+                  {isUploading ? 'Mengunggah...' : 'Upload Foto'}
+                </label>
               </>
             )}
+
           </div>
 
           <div className="space-y-6">
@@ -99,7 +140,7 @@ export default function ProfilePage() {
                     type="text"
                     value={newName}
                     onChange={(e) => setNewName(e.target.value)}
-                    className="border border-gray-300 rounded px-3 py-1 text-sm w-full sm:w-auto"
+                    className="text-black border border-gray-300 rounded px-3 py-1 text-sm w-full sm:w-auto"
                   />
                   <button
                     onClick={handleSaveName}
@@ -166,15 +207,15 @@ export default function ProfilePage() {
   );
 }
 
+// Card & List Components
 function SummaryCard({ title, value }: { title: string; value?: number }) {
   return (
-    <div className="bg-gray-50 border-2 border-gray-300 rounded-lg p-4 text-center">
-      <p className="text-xs text-purple-600 uppercase tracking-wide font-semibold">{title}</p>
+    <div className="bg-gray-400 border-2 border-black rounded-lg p-4 text-center">
+      <p className="text-xs text-white uppercase tracking-wide font-semibold">{title}</p>
       <p className="text-xl font-semibold text-gray-900 mt-1">{value ?? 0}</p>
     </div>
   );
 }
-
 
 function CouponList({ coupons }: { coupons: any[] }) {
   return (
