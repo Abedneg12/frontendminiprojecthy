@@ -17,6 +17,7 @@ export default function ProfilePage() {
   const [newName, setNewName] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     dispatch(fetchCustomerProfile());
@@ -60,35 +61,59 @@ export default function ProfilePage() {
   };
 
   const handleUploadPhoto = async (file: File) => {
-  const formData = new FormData();
-  formData.append('profile_picture', file);
+    const formData = new FormData();
+    formData.append('profile_picture', file);
 
-  try {
-    setIsUploading(true); // mulai upload
-    const token = localStorage.getItem('token');
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/profile/customer/upload`, {
-      method: 'PUT',
+    try {
+      setIsUploading(true);
+      const token = localStorage.getItem('token');
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/profile/customer/upload-picture`, {
+      method: 'PATCH',
       headers: { Authorization: `Bearer ${token}` },
       body: formData,
     });
 
+      const result = await res.json();
+      if (res.ok) {
+        toast.success('Foto profil berhasil diupload');
+        dispatch(fetchCustomerProfile());
+      } else {
+        toast.error(result.message || 'Gagal upload foto');
+      }
+    } catch {
+      toast.error('Terjadi kesalahan saat upload foto');
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleDeletePhoto = async () => {
+  try {
+    setIsDeleting(true);
+    const token = localStorage.getItem('token');
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/profile/customer/delete-picture`, {
+      method: 'PATCH',
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
     const result = await res.json();
     if (res.ok) {
-      toast.success('Foto profil berhasil diupload');
+      toast.success('Foto profil berhasil dihapus');
       dispatch(fetchCustomerProfile());
     } else {
-      toast.error(result.message || 'Gagal upload foto');
+      toast.error(result.message || 'Gagal menghapus foto');
     }
   } catch {
-    toast.error('Terjadi kesalahan saat upload foto');
+    toast.error('Terjadi kesalahan saat menghapus foto');
   } finally {
-    setIsUploading(false); // selesai upload
+    setIsDeleting(false);
   }
 };
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       handleUploadPhoto(e.target.files[0]);
+      e.target.value = ''; // reset input
     }
   };
 
@@ -114,7 +139,13 @@ export default function ProfilePage() {
                     <input type="file" className="hidden" onChange={onFileChange} disabled={isUploading} />
                     {isUploading ? 'Mengunggah...' : 'Ubah Foto'}
                   </label>
-                  <button className="text-sm text-red-500 hover:underline" disabled={isUploading}>Hapus</button>
+                  <button
+                    onClick={handleDeletePhoto}
+                    className="text-sm text-red-500 hover:underline"
+                    disabled={isUploading}
+                  >
+                    {isDeleting ? 'Menghapus...' : 'Hapus'}
+                  </button>
                 </div>
               </>
             ) : (
@@ -128,7 +159,6 @@ export default function ProfilePage() {
                 </label>
               </>
             )}
-
           </div>
 
           <div className="space-y-6">
@@ -207,7 +237,7 @@ export default function ProfilePage() {
   );
 }
 
-// Card & List Components
+// Ringkasan dan List Component
 function SummaryCard({ title, value }: { title: string; value?: number }) {
   return (
     <div className="bg-gray-400 border-2 border-black rounded-lg p-4 text-center">
