@@ -5,6 +5,7 @@ import { Montserrat } from 'next/font/google';
 import StoreProvider from "@/components/storeProvider";
 import { Toaster} from 'react-hot-toast'
 import AuthInitializer from '@/components/AuthInitializer';
+import Navbar from "@/components/Navbar";
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -39,6 +40,7 @@ export default function RootLayout({
         <StoreProvider>
           <AuthInitializer>
           <div>
+            <Navbar/>
           <Toaster position = "top-right" />
           {children}
           </div>

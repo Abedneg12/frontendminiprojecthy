@@ -2,6 +2,8 @@
 
 import Image from 'next/image';
 
+
+
 interface Event {
   id: string;
   title: string;
