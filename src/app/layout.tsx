@@ -6,7 +6,6 @@ import StoreProvider from "@/components/storeProvider";
 import { Toaster} from 'react-hot-toast'
 import AuthInitializer from '@/components/AuthInitializer';
 
-
 const montserrat = Montserrat({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
@@ -39,8 +38,10 @@ export default function RootLayout({
       >
         <StoreProvider>
           <AuthInitializer>
+          <div>
           <Toaster position = "top-right" />
           {children}
+          </div>
           </AuthInitializer>
         </StoreProvider>
       </body>

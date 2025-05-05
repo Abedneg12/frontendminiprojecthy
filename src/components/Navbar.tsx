@@ -6,10 +6,12 @@ import { useAppSelector, useAppDispatch } from '@/lib/redux/hooks';
 import { logout } from '@/lib/redux/slices/authSlice'
 
 export default function Navbar() {
+
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { user, isAuthenticated } = useAppSelector((state) => state.auth);
   const [showMenu, setShowMenu] = useState(false);
+  
 
 
   const handleAvatarClick = () => {
