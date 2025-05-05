@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAppSelector, useAppDispatch } from '@/lib/redux/hooks';
 import { getUserFromToken } from '@/utils/auth';
-import { logout, setUserFromToken } from '@/lib/redux/slices/authSlice'
+import { logout, setUserFromToken } from '@/lib/redux/slices/authSlice';
 import Link from 'next/link';
 
 export default function Navbar() {
