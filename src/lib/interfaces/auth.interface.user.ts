@@ -10,6 +10,7 @@ export interface User {
   role: 'CUSTOMER' | 'ORGANIZER';
   referral_code?: string;
   is_verified?: boolean;
+  profile_picture?: string | null;
   points?: Point[];
   coupons?: Coupon[];
   vouchers?: Voucher[];
