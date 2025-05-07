@@ -25,7 +25,7 @@ export default function EmailVerifiedSuccessPage() {
   }, [dispatch, router]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-green-100 text-center">
+    <div className="min-h-screen flex items-center justify-center bg-yellow-100 text-center">
       <div className="bg-white p-10 rounded shadow-md">
         <h1 className="text-2xl font-bold text-green-600">Email Terverifikasi!</h1>
         <p className="mt-3 text-gray-600">Akunmu sudah berhasil diverifikasi. Mengarahkan ke halaman utama...</p>
