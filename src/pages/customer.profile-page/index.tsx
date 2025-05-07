@@ -122,7 +122,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <section className="min-h-screen bg-slate-100 px-6 py-12 sm:px-12 md:px-20 lg:px-32 font-montserrat">
+    <section className="min-h-screen bg-white px-6 py-12 sm:px-12 md:px-20 lg:px-32 font-montserrat">
       <div className="max-w-5xl mx-auto">
         <header className="mb-12">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900">Profil Saya</h1>
