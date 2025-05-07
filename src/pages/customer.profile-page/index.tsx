@@ -125,8 +125,8 @@ export default function ProfilePage() {
     <section className="min-h-screen bg-white px-6 py-12 sm:px-12 md:px-20 lg:px-32 font-montserrat">
       <div className="max-w-5xl mx-auto">
         <header className="mb-12">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900">Profil Saya</h1>
-          <p className="text-gray-500 text-sm">Informasi akun dan aktivitas Anda.</p>
+          <h1 className="text-3xl md:text-4xl font-bold text-yellow-600">Profil Saya</h1>
+          <p className="text-black text-sm">Informasi akun dan aktivitas Anda.</p>
         </header>
 
         <div className="grid md:grid-cols-[auto_1fr] gap-8 items-start">
@@ -191,7 +191,7 @@ export default function ProfilePage() {
                 </div>
               ) : (
                 <div className="flex items-center gap-2 mt-1">
-                  <p className="text-[15px] text-gray-900 font-semibold">{profile.full_name}</p>
+                  <p className="text-[15px] text-black font-semibold">{profile.full_name}</p>
                   <button onClick={() => setIsEditingName(true)} className="text-sm text-blue-600 hover:underline">
                     Ubah
                   </button>
@@ -201,12 +201,12 @@ export default function ProfilePage() {
 
             <div>
               <label className="block text-sm text-gray-600">Email</label>
-              <p className="text-[15px] text-gray-900 font-semibold">{profile.email}</p>
+              <p className="text-[15px] text-black font-semibold">{profile.email}</p>
             </div>
 
             <div>
               <label className="block text-sm text-gray-600">Referral Code</label>
-              <p className="text-[15px] text-gray-900 font-semibold">{profile.referral_code || '-'}</p>
+              <p className="text-[15px] text-black font-semibold">{profile.referral_code || '-'}</p>
             </div>
 
             <div>
@@ -240,7 +240,7 @@ export default function ProfilePage() {
 // Ringkasan dan List Component
 function SummaryCard({ title, value }: { title: string; value?: number }) {
   return (
-    <div className="bg-gray-400 border-2 border-black rounded-lg p-4 text-center">
+    <div className="bg-yellow-500 border-2 border-black rounded-lg p-4 text-center">
       <p className="text-xs text-white uppercase tracking-wide font-semibold">{title}</p>
       <p className="text-xl font-semibold text-gray-900 mt-1">{value ?? 0}</p>
     </div>
@@ -250,7 +250,7 @@ function SummaryCard({ title, value }: { title: string; value?: number }) {
 function CouponList({ coupons }: { coupons: any[] }) {
   return (
     <div>
-      <h2 className="text-lg font-semibold text-gray-900 mb-2">Coupon Saya</h2>
+      <h2 className="text-lg font-semibold text-yellow-600 mb-2">Coupon Saya</h2>
       {coupons?.length > 0 ? (
         <ul className="space-y-3 text-sm">
           {coupons.map((coupon) => (
@@ -274,7 +274,7 @@ function CouponList({ coupons }: { coupons: any[] }) {
 function VoucherList({ vouchers }: { vouchers: any[] }) {
   return (
     <div>
-      <h2 className="text-lg font-semibold text-gray-900 mb-2">Voucher Event Aktif</h2>
+      <h2 className="text-lg font-semibold text-yellow-600 mb-2">Voucher Event Aktif</h2>
       {vouchers?.length > 0 ? (
         <ul className="space-y-3 text-sm">
           {vouchers.map((voucher) => (
