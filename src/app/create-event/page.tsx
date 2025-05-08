@@ -31,9 +31,6 @@ export default function CreateEventPage() {
     location: '',
     showMap: false,
     overview: '',
-    ageRestriction: '',
-    doorTime: '',
-    pickupInfo: '',
     category: '',
     image: null as File | null,
     previewImage: '',
@@ -42,10 +39,6 @@ export default function CreateEventPage() {
       price: number;
       quantity: number;
       description: string;
-    }>,
-      faqs: [] as Array<{
-      question: string;
-      answer: string;
     }>,
   });
 
@@ -77,15 +70,6 @@ export default function CreateEventPage() {
     });
   };
 
-  const handleAddFaq = () => {
-    if (newFaq.question && newFaq.answer) {
-      setEventData({
-        ...eventData,
-        faqs: [...eventData.faqs, newFaq],
-      });
-      setNewFaq({ question: '', answer: '' });
-    }
-  };
 
   const handleAddTicket = () => {
     if (newTicket.type && newTicket.price >= 0) {
@@ -175,17 +159,17 @@ export default function CreateEventPage() {
 
 
             <div>
-  <label className="block text-sm font-medium text-gray-700 mb-1">Event Image</label>
-  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-    <div className="flex flex-col items-center justify-center space-y-4">
-      {eventData.previewImage ? (
-        <div className="w-full h-64 relative rounded-lg overflow-hidden mb-4">
-          <Image
-            src={eventData.previewImage}
-            alt="Event preview"
-            fill
-            className="object-cover"
-          />
+            <label className="block text-sm font-medium text-gray-700 mb-1">Event Image</label>
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+            <div className="flex flex-col items-center justify-center space-y-4">
+             {eventData.previewImage ? (
+             <div className="w-full h-64 relative rounded-lg overflow-hidden mb-4">
+             <Image
+              src={eventData.previewImage}
+              alt="Event preview"
+              fill
+              className="object-cover"
+            />
         </div>
       ) : (
         <div className="w-full h-64 bg-gray-100 rounded-lg flex flex-col items-center justify-center">
