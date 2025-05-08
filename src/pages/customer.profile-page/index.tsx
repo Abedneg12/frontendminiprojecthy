@@ -6,10 +6,12 @@ import { fetchCustomerProfile } from '@/lib/redux/slices/customerProfileSlice';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import toast from 'react-hot-toast';
+import {useRouter} from 'next/navigation';
 
 dayjs.extend(utc);
 
 export default function ProfilePage() {
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const { data: profile, loading } = useAppSelector((state) => state.customerProfile);
 
@@ -219,7 +221,14 @@ export default function ProfilePage() {
             </div>
           </div>
         </div>
+        <button
+        onClick={() => router.push('/reset-password')}
+        className="text-sm text-blue-600 hover:underline mt-4"
+        >
+          Reset Password
+        </button>
 
+    
         <hr className="my-10 border-black" />
 
         <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
