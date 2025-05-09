@@ -10,26 +10,17 @@ export default function Navbar() {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { user, isAuthenticated } = useAppSelector((state) => state.auth);
+
   const [showMenu, setShowMenu] = useState(false);
-  const pathname = usePathname();
   const [isLocationOpen, setIsLocationOpen] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState('All Locations');
   const [searchQuery, setSearchQuery] = useState('');
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [customerProfilePicture, setCustomerProfilePicture] = useState<string | null>(null);
   const [organizerProfilePicture, setOrganizerProfilePicture] = useState<string | null>(null);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
-
-  const handleAvatarClick = () => {
-    if (user?.role === 'CUSTOMER') {
-      router.push('/profile');
-    } else if (user?.role === 'ORGANIZER') {
-      router.push('/organizer/dashboard');
-    }
-    setShowMenu(false);
-  };
+  const menuTimeout = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const fetchProfilePicture = async () => {
@@ -43,17 +34,14 @@ export default function Navbar() {
             : '/organizer/me';
 
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${endpoint}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
 
         const result = await res.json();
-
         if (res.ok) {
           if (user.role === 'CUSTOMER') {
             setCustomerProfilePicture(result.data.profile_picture || null);
-          } else if (user.role === 'ORGANIZER') {
+          } else {
             setOrganizerProfilePicture(result.data.profile_picture || null);
           }
         }
@@ -64,6 +52,15 @@ export default function Navbar() {
 
     fetchProfilePicture();
   }, [user]);
+
+  const handleAvatarClick = () => {
+    if (user?.role === 'CUSTOMER') {
+      router.push('/profile');
+    } else if (user?.role === 'ORGANIZER') {
+      router.push('/organizer/dashboard');
+    }
+    setShowMenu(false);
+  };
 
   const handleLogout = () => {
     dispatch(logout());
@@ -83,18 +80,10 @@ export default function Navbar() {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsLocationOpen(false);
       }
-      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
-        setIsMobileMenuOpen(false);
-      }
     };
-
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
-
-  const filteredLocations = locations.filter(location =>
-    location.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
   const handleExploreClick = () => {
     router.push('/');
@@ -107,94 +96,108 @@ export default function Navbar() {
   };
 
   return (
-    <header className="w-full backdrop-blur bg-white/70 border-b border-gray-200 fixed top-0 z-50 shadow-md">
+    <header className="w-full bg-white shadow-sm fixed top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <Link href="/" className="flex items-center space-x-2">
-            <img src="findyourticket.png" alt="findyourticket" className="h-10 object-contain" />
-          </Link>
+          <div className="flex items-center flex-shrink-0">
+            <Link href="/" className="w-28 sm:w-32 md:w-40 lg:w-48 h-10 sm:h-12 md:h-14 lg:h-16 mr-2 sm:mr-3 md:mr-4">
+              <img src="findyourticket.png" alt="findyourticket" className="h-full w-full object-contain object-left" />
+            </Link>
+          </div>
 
           <div className="hidden md:block flex-grow mx-4">
             <input
               type="text"
               placeholder="Search Ticket"
-              className="w-full px-4 py-2 rounded-xl border border-gray-300 bg-white text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+              className="w-full px-4 py-1.5 rounded-full border border-gray-300 shadow-sm focus:outline-none focus:border-yellow-400 text-sm text-gray-600"
             />
           </div>
 
-          <nav className="hidden md:flex items-center space-x-6 text-sm font-medium text-gray-700">
+          <div className="hidden md:flex space-x-6 text-sm font-medium text-gray-700">
             <Link href="/" onClick={handleExploreClick} className="hover:text-yellow-500">Explore</Link>
-            <Link href="/create-event" className="hover:text-yellow-500">Create Event</Link>
-            <Link href="/favorites" className="hover:text-yellow-500">Favorites</Link>
-            <Link href="/my-tickets" className="hover:text-yellow-500">My Tickets</Link>
-          </nav>
+            <button onClick={() => router.push('/create-event')} className="hover:text-yellow-500">Create Your Event</button>
+            <button onClick={() => router.push('/favorites')} className="hover:text-yellow-500">Favorites</button>
+            <button onClick={() => router.push('/my-tickets')} className="hover:text-yellow-500">Find My Tickets</button>
+          </div>
 
           <div className="ml-4 flex items-center space-x-4">
             {!isAuthenticated ? (
               <button
                 onClick={() => router.push('/login')}
-                className="px-4 py-1.5 bg-yellow-500 hover:bg-yellow-600 text-white rounded-full text-sm font-semibold shadow-sm"
+                className="px-4 py-1.5 bg-yellow-600 hover:bg-yellow-700 text-white rounded-full text-sm font-semibold"
               >
                 Sign In
               </button>
             ) : (
-              <div className="relative">
+              <div
+                className="relative"
+                onMouseEnter={() => {
+                  if (menuTimeout.current) clearTimeout(menuTimeout.current);
+                  setShowMenu(true);
+                }}
+                onMouseLeave={() => {
+                  menuTimeout.current = setTimeout(() => setShowMenu(false), 250);
+                }}
+              >
                 <img
-                  src={user?.role === 'CUSTOMER' ? customerProfilePicture || "/avatar.png" : organizerProfilePicture || "/avatar.png"}
+                  src={user?.role === 'CUSTOMER'
+                    ? customerProfilePicture || "/avatar.png"
+                    : organizerProfilePicture || "/avatar.png"
+                  }
                   alt="avatar"
-                  onClick={() => setShowMenu(!showMenu)}
-                  className="w-9 h-9 rounded-full cursor-pointer border border-gray-300 hover:opacity-80 transition"
+                  className="w-9 h-9 rounded-full cursor-pointer border-2 border-yellow-500 hover:opacity-80 transition"
                 />
-                {showMenu && (
-                  <div className="absolute right-0 mt-2 w-44 bg-white border border-gray-200 rounded-lg shadow-md text-sm z-50">
-                    <button
-                      onClick={handleAvatarClick}
-                      className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-                    >
-                      {user?.role === 'CUSTOMER' ? 'Profile' : 'Dashboard'}
-                    </button>
-                    <button
-                      onClick={handleLogout}
-                      className="block w-full text-left px-4 py-2 text-red-600 hover:bg-red-100"
-                    >
-                      Logout
-                    </button>
-                  </div>
-                )}
+                <div className={`absolute right-0 mt-2 w-44 bg-white border rounded shadow text-sm z-50 transition-all duration-200 ease-out ${showMenu ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
+                  <button
+                    onClick={handleAvatarClick}
+                    className="block px-4 py-2 hover:bg-gray-100 w-full text-left text-gray-700"
+                  >
+                    {user?.role === 'CUSTOMER' ? 'Profile' : 'Dashboard'}
+                  </button>
+                  <button
+                    onClick={handleLogout}
+                    className="block px-4 py-2 text-red-600 hover:bg-red-100 w-full text-left"
+                  >
+                    Logout
+                  </button>
+                </div>
               </div>
             )}
 
+            {/* Location Dropdown (Tetap Ditampilkan) */}
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setIsLocationOpen(!isLocationOpen)}
-                className="hidden sm:flex items-center space-x-2 px-4 py-1.5 border border-gray-300 bg-white rounded-full text-sm text-gray-700 hover:bg-gray-50 transition"
+                className="hidden sm:flex items-center space-x-2 px-4 py-1.5 border border-gray-300 rounded-full text-sm text-gray-700 hover:bg-gray-50"
               >
                 <span>📍</span>
-                <span className="truncate max-w-[100px] lg:max-w-[120px]">{selectedLocation}</span>
+                <span className="truncate max-w-[120px]">{selectedLocation}</span>
                 <span className={`transition ${isLocationOpen ? 'rotate-180' : ''}`}>▼</span>
               </button>
               {isLocationOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-md z-50 text-sm max-h-60 overflow-y-auto">
-                <input
-                  type="text"
-                  placeholder="Cari lokasi..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full px-3 py-2 text-xs text-gray-700 border-b focus:outline-none"
-                />
-                {filteredLocations.map((loc) => (
-                  <button
-                    key={loc}
-                    onClick={() => {
-                      setSelectedLocation(loc);
-                      setIsLocationOpen(false);
-                    }}
-                    className="w-full text-left px-3 py-2 hover:bg-gray-100 text-gray-800"
-                  >
-                    {loc}
-                  </button>
-                ))}
-              </div>
+                <div className="absolute right-0 mt-2 w-48 bg-white border rounded shadow z-50 text-sm max-h-60 overflow-y-auto">
+                  <input
+                    type="text"
+                    placeholder="Cari lokasi..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full px-3 py-1 border-b text-black text-xs focus:outline-none"
+                  />
+                  {locations.filter(loc =>
+                    loc.toLowerCase().includes(searchQuery.toLowerCase())
+                  ).map((loc) => (
+                    <button
+                      key={loc}
+                      onClick={() => {
+                        setSelectedLocation(loc);
+                        setIsLocationOpen(false);
+                      }}
+                      className="block w-full text-left px-3 py-2 text-gray-700 hover:bg-gray-100"
+                    >
+                      {loc}
+                    </button>
+                  ))}
+                </div>
               )}
             </div>
           </div>
