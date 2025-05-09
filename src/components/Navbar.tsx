@@ -101,7 +101,7 @@ export default function Navbar() {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center flex-shrink-0">
             <Link href="/" className="w-28 sm:w-32 md:w-40 lg:w-48 h-10 sm:h-12 md:h-14 lg:h-16 mr-2 sm:mr-3 md:mr-4">
-              <img src="findyourticket.png" alt="findyourticket" className="h-full w-full object-contain object-left" />
+              <img src="/findyourticket.png" alt="findyourticket" className="h-full w-full object-contain object-left" />
             </Link>
           </div>
 
