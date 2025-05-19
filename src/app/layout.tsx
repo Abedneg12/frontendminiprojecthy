@@ -42,8 +42,8 @@ export default function RootLayout({
       >
         <StoreProvider>
           <AuthInitializer>
-          <div>
             <Navbar/>
+          <div>
           <Toaster position = "top-right" />
           {children}
           </div>

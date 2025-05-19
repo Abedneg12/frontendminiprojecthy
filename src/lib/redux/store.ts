@@ -1,13 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from './slices/authSlice';
-import profileReducer from './slices/profileSlice';
+import OrganizerProfileReducer from './slices/OrganizerProfileSlice';
 import customerProfileReducer from './slices/customerProfileSlice';
+
 
 export function makeStore() {
   return configureStore({
     reducer: {
         auth: authReducer,
-        profile: profileReducer,
+        OrganizerProfile: OrganizerProfileReducer,
         customerProfile: customerProfileReducer,
     },
   });

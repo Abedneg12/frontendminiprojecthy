@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useAppSelector, useAppDispatch } from '@/lib/redux/hooks';
-import { logout, setUserFromToken } from '@/lib/redux/slices/authSlice';
+import { logout} from '@/lib/redux/slices/authSlice';
 import Link from 'next/link';
 
 export default function Navbar() {
@@ -31,7 +31,7 @@ export default function Navbar() {
         const endpoint =
           user.role === 'CUSTOMER'
             ? '/profile/me/customer'
-            : '/organizer/me';
+            : '/profile/me/organizer';
 
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${endpoint}`, {
           headers: { Authorization: `Bearer ${token}` },

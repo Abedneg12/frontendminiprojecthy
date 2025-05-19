@@ -1,6 +1,4 @@
-import Image from "next/image";
 import LandingPage from "@/pages/landing-page";
-import Tickets from "@/pages/tickets";
 import TrendingNow from "@/pages/trending";
 
 export default function Home() {
@@ -11,7 +9,6 @@ export default function Home() {
       <section id="trending-now">
           <TrendingNow />
       </section>
-      <Tickets />
       </div>
     </main>
   )

@@ -1,10 +1,6 @@
 export interface Voucher {
-  id: number;
   code: string;
   discount_amount: number;
-  discount_type: string;
-  event: {
-    name: string;
-    start_date: string;
-  };
+  start_date: string; // gunakan snake_case yang konsisten
+  end_date: string;
 }

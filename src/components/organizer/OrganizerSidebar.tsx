@@ -4,11 +4,11 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const links = [
+  { label: 'My Profile', href: '/organizer/dashboard/profile-organizer' },
   { label: 'Dashboard', href: '/organizer/dashboard' },
   { label: 'My Events', href: '/organizer/dashboard/my-event' },
   { label: 'Transaction', href: '/organizer/dashboard/transaction' },
-  { label: 'Statistics', href: '/organizer/statistics' },
-  { label: 'Attendees', href: '/organizer/attendees' },
+  { label: 'Statistics', href: '/organizer/dashboard/stats'}
 ];
 
 export default function OrganizerSidebar() {
