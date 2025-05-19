@@ -1,63 +1,43 @@
-// import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-// import { EventData, EventStatus } from '@/lib/interfaces/event.interface';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { EventData } from '@/lib/interfaces/event.interface';
 
-// const isBrowser = typeof window !== 'undefined';
+interface EventStatus {
+  events: EventData[];
+  currentEvent: EventData | null;
+}
 
-// const loadInitialEvents = (): EventData[] => {
-//   if (isBrowser) {
-//     try {
-//       const stored = localStorage.getItem('events');
-//       return stored ? JSON.parse(stored) : [];
-//     } catch {
-//       return [];
-//     }
-//   }
-//   return [];
-// };
+const getLocalStorageEvents = (): EventData[] => {
+  if (typeof window === 'undefined') {
+    return [];
+  }
+  try {
+    return JSON.parse(localStorage.getItem('events') || '[]');
+  } catch (error) {
+    console.error('Error accessing localStorage:', error);
+    return [];
+  }
+};
 
-// const initialState: EventStatus = {
-//   events: loadInitialEvents(),
-//   currentEvent: null,
-// };
+const initialState: EventStatus = {  
+  events: getLocalStorageEvents(),
+  currentEvent: null
+};
+  
+export const eventSlice = createSlice({
+  name: 'events',
+  initialState,
+  reducers: {
+    addEvent: (state, action: PayloadAction<Omit<EventData, 'created_at' | 'updated_at' | 'remaining_seats'>>) => {
+      const newEvent: EventData = {
+          ...action.payload,
+          total_seats: action.payload.total_seats,
+          remaining_seats: 0
+      };
+      state.events.push(newEvent);
+      localStorage.setItem('events', JSON.stringify(state.events));
+    },
+  }
+});
 
-// export const eventSlice = createSlice({
-//   name: 'events',
-//   initialState,
-//   reducers: {
-//     addEvent: (
-//       state,
-//       action: PayloadAction<Omit<EventData, 'id' | 'created_at' | 'updated_at' | 'remaining_seats'>>
-//     ) => {
-//       const newEvent: EventData = {
-//         ...action.payload,
-//         id: Date.now(),
-//         remaining_seats: action.payload.total_seats,
-//         created_at: new Date().toISOString(),
-//         updated_at: new Date().toISOString(),
-//       };
-
-//       state.events.push(newEvent);
-
-//       if (isBrowser) {
-//         localStorage.setItem('events', JSON.stringify(state.events));
-//       }
-//     },
-
-//     setCurrentEvent: (state, action: PayloadAction<number>) => {
-//       state.currentEvent = state.events.find((e) => e.id === action.payload) || null;
-//     },
-
-//     updateRemainingSeats: (state, action: PayloadAction<{ id: number; seats: number }>) => {
-//       const event = state.events.find((e) => e.id === action.payload.id);
-//       if (event) {
-//         event.remaining_seats = action.payload.seats;
-//         if (isBrowser) {
-//           localStorage.setItem('events', JSON.stringify(state.events));
-//         }
-//       }
-//     },
-//   },
-// });
-
-// export const { addEvent, setCurrentEvent, updateRemainingSeats } = eventSlice.actions;
-// export default eventSlice.reducer;
+export const { addEvent } = eventSlice.actions;
+export default eventSlice.reducer;
