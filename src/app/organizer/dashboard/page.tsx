@@ -6,7 +6,8 @@ import TopEvents from '@/components/organizer/TopEvents';
 import { useAppSelector } from '@/lib/redux/hooks';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { getUserFromToken } from '@/utils/auth';
+import { getUserFromToken, isAuthenticated } from '@/utils/auth';
+import { toast } from 'react-toastify';
 
 export default function OrganizerDashboardPage() {
   const { user } = useAppSelector((state) => state.auth);
@@ -14,15 +15,17 @@ export default function OrganizerDashboardPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const user = getUserFromToken();
-    if (!user || user.role !== 'ORGANIZER') {
-      setError('Akses ditolak: Halaman ini hanya untuk organizer. Anda akan diarahkan ke halaman utama...');
-      // Redirect setelah 2 detik
-      setTimeout(() => {
-        router.push('/');
-      }, 2000);
+    if (!isAuthenticated()) {
+      toast.error('Anda harus login terlebih dahulu.')
+      router.push('/login')
+      return
     }
-  }, [router]);
+    const user = getUserFromToken()
+    if (!user || user.role !== 'ORGANIZER') {
+      toast.error('Hanya organizer yang dapat mengakses halaman ini.')
+      router.push('/login')
+    }
+  }, [router])
 
   if (error) {
     return (
