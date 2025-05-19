@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import EventCard from '@/components/eventCard';
+import { EventData } from '@/lib/interfaces/event.interface';
 
 export default function LandingPage() {
   const images: string[] = [
@@ -9,8 +11,41 @@ export default function LandingPage() {
     '/placeholder2.jpg',
     '/placeholder3.jpg'
   ];
-
+  
+  const [imageUrls, setImageUrls] = useState<Record<string, string>>({});
   const [current, setCurrent] = useState<number>(0);
+
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [events, setEvents] = useState<EventData[]>([]);
+  const filteredEvents = events.filter(event => 
+    selectedCategory ? event.category === selectedCategory : true
+  );
+
+  useEffect(() => {
+    const urls: Record<string, string> = {};
+    
+    events.forEach((event: EventData) => { 
+      if (event.image) {
+        if (event.image instanceof File) {
+          urls[event.name] = URL.createObjectURL(event.image);
+        } else if (typeof event.image === 'string') {
+          urls[event.name] = event.image;
+        }
+      }
+    });
+
+    setImageUrls(urls);
+
+    return () => {
+      Object.values(urls).forEach(url => {
+        if (url.startsWith('blob:')) {
+          URL.revokeObjectURL(url);
+        }
+      });
+    };
+  }, [events]);
+
+
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -123,13 +158,22 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className="py-6 sm:py-8 md:py-10 bg-white">
+{/* <section className="py-6 sm:py-8 md:py-10 bg-white">
         <div className="container mx-auto px-4">
           <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
-            {['Music', 'Sports', 'Arts', 'Food', 'Business', 'Education', 'Comedy', 'Family', 'Festivals', 'Technology', 'Health', 'Other'].map((category, i) => (
+            {['Art', 'Education', 'Festival', 'Music'].map((category, i) => (
               <span 
                 key={i}
-                className="text-xs sm:text-sm px-3 py-1.5 bg-yellow-600 hover:bg-yellow-500 rounded-full transition-colors cursor-pointer"
+                className={`text-xs sm:text-sm px-3 py-1.5 rounded-full transition-colors cursor-pointer ${
+                  selectedCategory === category.toUpperCase() 
+                    ? 'bg-yellow-700 text-white' 
+                    : 'bg-yellow-600 hover:bg-yellow-500'
+                }`}
+                onClick={() => setSelectedCategory(
+                  selectedCategory === category.toUpperCase() 
+                    ? null 
+                    : category.toUpperCase()
+                )}
               >
                 {category}
               </span>
@@ -137,6 +181,23 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+
+<section className="py-10 px-6 md:px-16 bg-white">
+      <h2 className="text-2xl font-bold mb-8 text-gray-800">TICKETS FOR YOU</h2>
+      {events.length === 0 ? (
+        <p className="text-gray-600">No events available. Create your first event!</p>
+      ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {filteredEvents.map(event => (
+              <EventCard 
+                key={event.id} 
+                event={event} 
+                imageUrl={event.image_url || ''} 
+              />
+            ))}
+          </div>
+      )}
+    </section> */}
     </div>
   );
 }

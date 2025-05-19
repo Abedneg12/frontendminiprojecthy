@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import authReducer from './slices/authSlice';
 import profileReducer from './slices/profileSlice';
 import customerProfileReducer from './slices/customerProfileSlice';
+import eventReducer from './slices/eventDataSlice';
 
 export function makeStore() {
   return configureStore({
@@ -9,6 +10,7 @@ export function makeStore() {
         auth: authReducer,
         profile: profileReducer,
         customerProfile: customerProfileReducer,
+        events: eventReducer,
     },
   });
 }

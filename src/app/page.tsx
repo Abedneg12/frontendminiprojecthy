@@ -1,7 +1,6 @@
 import Image from "next/image";
 import LandingPage from "@/pages/landing-page";
-import Tickets from "@/pages/tickets";
-import TrendingNow from "@/pages/trending";
+import TicketSelection from "@/pages/ticket-selection";
 
 export default function Home() {
   return (
@@ -9,9 +8,8 @@ export default function Home() {
       <div className="w-full h-full bg-white">
       <LandingPage />
       <section id="trending-now">
-          <TrendingNow />
+          <TicketSelection />
       </section>
-      <Tickets />
       </div>
     </main>
   )

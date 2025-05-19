@@ -1,11 +1,21 @@
-export interface event {
-    name: string;
-    description: string;
-    category: 'MUSIC' | 'ART'|'FESTIVAL'|'EDUCATION';
-    location: string;
-    paid: boolean;
-    price: number;
-    start_date: Date;
-    end_date: Date;
-    total_seats: number;
-  }
+export interface EventData {
+  image: any;
+  id: number;
+  name: string;
+  subtitle: string;
+  description: string;
+  category: 'FESTIVAL' | 'MUSIC' | 'ART' | 'EDUCATION';
+  location: string;
+  paid: boolean;             
+  price: number;             
+  total_seats: number;  
+  remaining_seats: number;     
+  start_date: string;        
+  end_date: string;
+  image_url?: string;
+}
+
+export interface EventStatus {
+  events: EventData[];
+  currentEvent: EventData | null;
+} 
