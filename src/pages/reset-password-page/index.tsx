@@ -50,7 +50,7 @@ export default function ResetPasswordPage() {
       setIsSubmitting(true);
       const token = localStorage.getItem('token');
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/profile/reset-password`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/act/reset-password`, {
         method: 'PATCH',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -66,7 +66,8 @@ export default function ResetPasswordPage() {
 
       if (res.ok) {
         toast.success('Password berhasil diubah');
-        router.push('/profile');
+        localStorage.removeItem('token'); 
+        router.push('/login');
       } else {
         toast.error(result.message || 'Gagal mengubah password');
       }

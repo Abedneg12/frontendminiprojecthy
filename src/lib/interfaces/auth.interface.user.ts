@@ -22,17 +22,22 @@ export interface AuthState {
   isAuthenticated: boolean;
 }
 
-
-export interface ProfileState {
-  full_name: string;
-  email: string;
-  referral_code?: string;
-  is_verified: boolean;
-  profile_picture?: string;
-  points: number;
-  coupons: Coupon[];
-  vouchers: Voucher[];
-} 
+export interface OgranizerProfileState {
+  loading: boolean;
+  data: {
+    id: number;
+    full_name: string;
+    email: string;
+    referral_code: string;
+    is_verified: boolean;
+    profile_picture?: string | null;
+    point: number;
+    coupons: Coupon[];
+    vouchers: Voucher[];
+    events : Event[];
+  } | null;
+  error: string | null;
+}
 
 export interface CustomerProfileState {
   loading: boolean;

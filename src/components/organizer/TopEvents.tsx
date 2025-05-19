@@ -1,36 +1,65 @@
-// src/pages/organizer/dashboard/components/TopEvents.tsx
 'use client';
 
-interface EventData {
-  id: number;
-  name: string;
-  ticketsSold: number;
-  revenue: number;
-}
+import { useRouter } from 'next/navigation';
 
-const dummyTopEvents: EventData[] = [
-  { id: 1, name: 'Music Festival 2025', ticketsSold: 320, revenue: 32000000 },
-  { id: 2, name: 'Tech Conference', ticketsSold: 250, revenue: 27500000 },
-  { id: 3, name: 'Art Exhibition', ticketsSold: 180, revenue: 9000000 },
-  { id: 4, name: 'Charity Gala Night', ticketsSold: 120, revenue: 18000000 },
-  { id: 5, name: 'Startup Pitching Day', ticketsSold: 95, revenue: 14250000 }
+const dummyTopEvents = [
+  {
+    id: 1,
+    name: 'Tech Conference 2025',
+    date: '2025-08-10',
+    ticketsSold: 250,
+    revenue: 12500000,
+  },
+  {
+    id: 2,
+    name: 'Jazz Night Jakarta',
+    date: '2025-06-05',
+    ticketsSold: 180,
+    revenue: 9000000,
+  },
+  {
+    id: 3,
+    name: 'Startup Meetup Surabaya',
+    date: '2025-09-12',
+    ticketsSold: 120,
+    revenue: 6000000,
+  },
+  {
+    id: 4,
+    name: 'Art Expo Bandung',
+    date: '2025-07-22',
+    ticketsSold: 98,
+    revenue: 4900000,
+  },
+  {
+    id: 5,
+    name: 'Health & Wellness Fair',
+    date: '2025-05-30',
+    ticketsSold: 75,
+    revenue: 3750000,
+  },
 ];
 
 export default function TopEvents() {
+  const router = useRouter();
+
   return (
-    <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition duration-200">
+    <div>
       <h2 className="text-lg font-semibold text-gray-800 mb-4">Top 5 Events</h2>
-      <ul className="space-y-3 text-sm text-gray-700">
+      <ul className="space-y-3">
         {dummyTopEvents.map((event) => (
           <li
             key={event.id}
-            className="flex justify-between items-center p-3 rounded-md border border-gray-100 bg-gray-50 hover:bg-gray-100 transition"
+            onClick={() => router.push(`/organizer/dashboard/my-event/${event.id}`)} // Dynamic route placeholder
+            className="p-4 bg-gray-50 rounded-lg hover:bg-gray-100 border border-gray-200 cursor-pointer transition"
           >
-            <div>
-              <p className="font-semibold">{event.name}</p>
-              <p className="text-xs text-gray-500">
-                {event.ticketsSold} tiket terjual – Rp {event.revenue.toLocaleString()}
-              </p>
+            <div className="flex justify-between items-center mb-1">
+              <h3 className="text-sm font-medium text-gray-900">{event.name}</h3>
+              <span className="text-xs text-gray-500">{ new Date(event.date).toLocaleDateString()}</span>
+            </div>
+            <div className="flex justify-between text-xs text-gray-600">
+              <span>{event.ticketsSold} tiket terjual</span>
+              <span>Rp {event.revenue.toLocaleString()}</span>
             </div>
           </li>
         ))}
