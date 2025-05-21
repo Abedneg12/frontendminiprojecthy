@@ -5,12 +5,19 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/lib/redux/store';
 import Image from 'next/image';
 import axios from 'axios';
-import { TransactionStatus } from '@prisma/client';
+
+export enum TransactionStatus {
+  WAITING_FOR_PAYMENT = 'WAITING_FOR_PAYMENT',
+  DONE = 'DONE',
+  EXPIRED = 'EXPIRED',
+  REJECTED = 'REJECTED',
+  CANCELED = 'CANCELED'
+}
 
 export default function TransactionPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const eventName = searchParams.get('event');
+  const eventName = searchParams?.get('event') ?? '';
   const { events } = useSelector((state: RootState) => state.events);
   const { user } = useSelector((state: RootState) => state.auth);
   const event = events.find(e => e.name === eventName);
@@ -80,6 +87,34 @@ export default function TransactionPage() {
   const calculateBaseTotal = () => {
     if (!event) return 0;
     return quantity * event.price;
+  };
+
+  // Countdown timer for payment expiry
+  const startCountdown = (expiryTime: Date) => {
+    const updateCountdown = () => {
+      const now = new Date();
+      const diff = expiryTime.getTime() - now.getTime();
+      if (diff <= 0) {
+        setCountdown('Expired');
+        return;
+      }
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      setCountdown(
+        `${hours.toString().padStart(2, '0')}:${minutes
+          .toString()
+          .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+      );
+    };
+
+    updateCountdown();
+    const interval = setInterval(() => {
+      updateCountdown();
+      if (expiryTime.getTime() - new Date().getTime() <= 0) {
+        clearInterval(interval);
+      }
+    }, 1000);
   };
 
   const handlePurchase = async () => {
