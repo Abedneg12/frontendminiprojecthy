@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Montserrat } from 'next/font/google';
-import StoreProvider from "@/components/storeProvider";
+import StoreProvider from "@/lib/redux/storeProvider";
 import { Toaster} from 'react-hot-toast'
 import AuthInitializer from '@/components/AuthInitializer';
 import Navbar from "@/components/Navbar";
