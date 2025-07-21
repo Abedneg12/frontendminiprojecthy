@@ -10,7 +10,7 @@ import {useRouter} from 'next/navigation';
 
 dayjs.extend(utc);
 
-export default function ProfilePage() {
+export default function CustomerProfilePage() {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { data: profile, loading } = useAppSelector((state) => state.customerProfile);
