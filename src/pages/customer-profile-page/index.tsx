@@ -6,7 +6,7 @@ import { fetchCustomerProfile } from '@/lib/redux/slices/customerProfileSlice';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import toast from 'react-hot-toast';
-import {useRouter} from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 dayjs.extend(utc);
 
