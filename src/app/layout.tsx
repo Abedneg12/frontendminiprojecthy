@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Montserrat } from 'next/font/google';
-import StoreProvider from '@/lib/redux/storeProvider';
+import { makeStore } from "@/lib/redux/store";
 import { Toaster} from 'react-hot-toast'
 import AuthInitializer from '@/components/AuthInitializer';
 import Navbar from "@/components/Navbar";
+import { Provider } from "react-redux";
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -40,7 +41,7 @@ export default function RootLayout({
       <body 
         className={`${montserrat.className} ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <StoreProvider>
+        <Provider store={makeStore()}>
           <AuthInitializer>
             <Navbar/>
           <div>
@@ -48,7 +49,7 @@ export default function RootLayout({
           {children}
           </div>
           </AuthInitializer>
-        </StoreProvider>
+        </Provider>
       </body>
     </html>
   );
